@@ -12,8 +12,8 @@ export const syncUserCreation = inngest.createFunction(
             data: {
                 id: data.id,
                 email: data.email_addresses[0].email_address,
-                name: `${data.first_name} ${last_name}`,
-                imageUrl: data.image_url,
+                name: `${data.first_name} ${data.last_name}`,
+                image: data.image_url,
             }
         });
 
@@ -36,7 +36,7 @@ export const syncUserUpdation = inngest.createFunction(
                 _id: data.id,
                 email: data.email_addresses[0].email_address,
                 name: `${data.first_name} ${last_name}`,
-                imageUrl: data.image_url,
+                image: data.image_url,
             }
         });
 
@@ -60,29 +60,29 @@ export const syncUserDeletion = inngest.createFunction(
 //inngest Function to handle order creation event from user
 
 
-export const createUserOrder = inngest.createFunction(
-    {
-        id: "create-user-order",
-        batchEvents: {
-            maxSize: 5,
-            timeout: '5s'
-        },
-    },
-    { event: "order/created" },
-    async ({ events }) => {
+// export const createUserOrder = inngest.createFunction(
+//     {
+//         id: "create-user-order",
+//         batchEvents: {
+//             maxSize: 5,
+//             timeout: '5s'
+//         },
+//     },
+//     { event: "order/created" },
+//     async ({ events }) => {
 
-        const orders = events.map((event) => {
-            return {
-                userId: event.data.userId,
-                items: event.data.items,
-                amount: event.data.amount,
-                address: event.data.address,
-                date: event.data.date,
-            }
-        })
+//         const orders = events.map((event) => {
+//             return {
+//                 userId: event.data.userId,
+//                 items: event.data.items,
+//                 amount: event.data.amount,
+//                 address: event.data.address,
+//                 date: event.data.date,
+//             }
+//         })
 
-        await connectDB();
-        await Order.insertMany(orders);
-        return { success: true, processed: orders.length }
-    }
-)
+//         await connectDB();
+//         await Order.insertMany(orders);
+//         return { success: true, processed: orders.length }
+//     }
+// )
