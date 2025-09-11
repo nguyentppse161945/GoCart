@@ -15,11 +15,17 @@ export async function POST(request) {
         const contact = formData.get("contact");
         const address = formData.get("address");
         const image = formData.get("image");
+        const fields = { name, username, description, email, contact, address, image };
 
-        if (!name || !username || !description || !email || !contact || !address || !image) {
-            return NextResponse.json({ message: "Missing store infomation" }, { status: 400 });
+        for (const [key, value] of Object.entries(fields)) {
+            if (!value) {
+                return NextResponse.json(
+                    { message: `Missing ${key} in store information` },
+                    { status: 400 }
+                );
+            }
         }
-        
+
         const store = await prisma.store.findFirst({
             where: { userId: userId },
         });
@@ -79,7 +85,7 @@ export async function POST(request) {
 //check if user have already registered a store, if yes, then send status of store
 
 export async function GET(request) {
-    try{
+    try {
         const { userId } = getAuth(request);
         const store = await prisma.store.findFirst({
             where: { userId: userId },
@@ -89,7 +95,7 @@ export async function GET(request) {
             return NextResponse.json({ status: store.status });
         }
         return NextResponse.json({ status: "not registered" });
-    }catch(error){
+    } catch (error) {
         console.log(error);
         return NextResponse.json({ error: error.code || error.message }, { status: 400 });
 

@@ -22,12 +22,13 @@ export async function GET(request) {
             include: { product: true, product: true }
         })
 
-        const dashboardData ={
+        const dashboardData = {
             ratings,
             totalOrdrers: orders.length,
-            totalEarnings: Math.round(orders.reduce((acc, order) => acc + order.total, 0)) ,
+            totalEarnings: Math.round(orders.reduce((acc, order) => acc + order.total, 0)),
             totalProducts: products.length
         }
+        return NextResponse.json({ dashboardData })
     } catch (error) {
         return NextResponse.json({ error: error.code || error.message }, { status: 500 })
     }
