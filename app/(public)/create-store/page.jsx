@@ -7,6 +7,7 @@ import Loading from "@/components/Loading";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { set } from "date-fns";
 
 export default function CreateStore() {
   const { user } = useUser();
@@ -48,14 +49,34 @@ export default function CreateStore() {
             setMessage(
               "Your store has been approved, you can know add products to your store from dashboard"
             );
+            setTimeout(() => {
+              router.push("/store");
+            }, 5000);
+            break;
+          case "rejected":
+            setMessage(
+              "Your store request has been rejected, contact the admin for more details"
+            );
+
+          case "pending":
+            setMessage(
+              "Your store request has is pending, please wait for the admin to review your request"
+            );
+
+            break;
+          case "pending":
+            setMessage("Your store is under review, please try again");
             break;
 
           default:
             break;
         }
+      } else {
+        setAlreadySubmitted(false);
       }
-    } catch (error) {}
-
+    } catch (error) {
+      toast.error(error?.response?.data?.error || error.message);
+    }
     setLoading(false);
   };
 
@@ -79,15 +100,18 @@ export default function CreateStore() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      toast.success("Your request has been sent to Admin");
+      toast.success("Your request has been sent to Admin"|| data.success);
+      await fetchSellerStatus();
     } catch (error) {
       toast.error(error?.response?.data?.error || error.message);
     }
   };
 
   useEffect(() => {
-    fetchSellerStatus();
-  }, []);
+    if (user) {
+      fetchSellerStatus();
+    }
+  }, [user]);
 
   if (!user) {
     return (
