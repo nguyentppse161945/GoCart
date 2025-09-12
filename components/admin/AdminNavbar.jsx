@@ -1,7 +1,11 @@
 'use client'
+import { useUser, UserButton } from "@clerk/nextjs"
 import Link from "next/link"
+import { usePathname } from "next/navigation";
 
 const AdminNavbar = () => {
+    const {user} = useUser();
+    const pathname = usePathname();
 
 
     return (
@@ -13,7 +17,8 @@ const AdminNavbar = () => {
                 </p>
             </Link>
             <div className="flex items-center gap-3">
-                <p>Hi, Admin</p>
+                <p>Hi, {user.firstName}</p>
+                <UserButton />
             </div>
         </div>
     )
