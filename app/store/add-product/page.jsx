@@ -48,12 +48,13 @@ export default function StoreAddProduct() {
       formData.append("description", productInfo.description);
       formData.append("mrp", productInfo.mrp);
       formData.append("category", productInfo.category);
+      formData.append("price", productInfo.price);
 
       //Add images into formData
       Object.keys(images).forEach((key) => {
         images[key] && formData.append("images", images[key]);
       });
-      const token = getToken();
+      const token = await getToken();
       const { data } = await axios.post("/api/product/create", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
