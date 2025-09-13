@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import authAdmin from "@/middleware/authAdmin";
 import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
@@ -16,7 +17,7 @@ export async function POST(req) {
             await prisma.store.update({
                 where: { id: storeId },
                 data: {
-                    status: 'Approved',
+                    status: 'approved',
                     isActive: true
                 }
             })
@@ -25,7 +26,7 @@ export async function POST(req) {
                 await prisma.store.update({
                     where: { id: storeId },
                     data: {
-                        status: 'Rejected',
+                        status: 'rejected',
                         isActive: false
                     }
                 })
@@ -50,7 +51,7 @@ export async function GET(req) {
         }
         const stores = await prisma.store.findMany({
             where: {
-                status: { in: ['Pending', 'Rejected'] }
+                status: { in: ['pending', 'rejected'] }
             },include:{user: true}
         })
         return NextResponse.json({stores})

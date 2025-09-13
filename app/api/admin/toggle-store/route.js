@@ -4,7 +4,7 @@ import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 //toggle store isActive
-export async function GET(req) {
+export async function POST(req) {
     try {
         const { userId } = getAuth(req);
         const isAdmin = await authAdmin(userId);
@@ -32,7 +32,6 @@ export async function GET(req) {
             }
         })
 
-        return NextResponse.json({ message: "Store status updated successfully" })
         return NextResponse.json({ message: "Store status updated successfully" })
     } catch (error) {
         console.log(error)

@@ -14,7 +14,7 @@ export async function GET(req) {
         }
         const stores = await prisma.store.findMany({
             where: {
-                status: { in: ['Approved'] }
+                status: { in: ['approved'] }
             }, include: { user: true }
         })
         return NextResponse.json({ stores })

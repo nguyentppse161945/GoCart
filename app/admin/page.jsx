@@ -50,7 +50,7 @@ export default function AdminDashboard() {
           Authorization: `Bearer ${token}`,
         },
       });
-      setDashboardData(data);
+      setDashboardData(data.dashboardData);
     } catch (error) {
       console.log(error);
       toast.error(error?.response?.data?.error || error.message);
@@ -92,7 +92,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Area Chart */}
-      <OrdersAreaChart allOrders={dashboardData.allOrders} />
+      <OrdersAreaChart allOrders={dashboardData.allOrders } />
     </div>
   );
 }
