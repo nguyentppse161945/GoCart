@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET(req) {
     try {
         const { searchParams } = new URL(req.url);
-        const username = searchParams.get('username').toLowerCase();
+        const username = searchParams.get("Username");
         if (!username) {
             return NextResponse.json({ error: "Username is required" }, { status: 400 });
         }
