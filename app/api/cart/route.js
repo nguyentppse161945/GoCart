@@ -6,12 +6,12 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
     try {
-        const { cart } = await req.json();
+        const { cartItems } = await req.json();
         const { userId } = getAuth(req);
         //save the cart to the user object
         await prisma.user.update({
             where: { id: userId },
-            data: { cart: cart }
+            data: { cart: cartItems }
         })
 
         return NextResponse.json({ message: "Cart updated successfully" });

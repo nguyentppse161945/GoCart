@@ -1,19 +1,18 @@
 //add new Address
 
 import prisma from "@/lib/prisma";
-import { getAuth } from "@clerk/nextjs/dist/types/server";
+import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
     try {
         const { userId } = getAuth(req);
-        const { cart } = await req.json();
+        const { address } = await req.json();
         address.userId = userId
         //Save the caer to the user object
-        const user = await prisma.user.update({ where: { id: userId }, data: { cart } });
 
         const newAddress = await prisma.address.create({
-            data: { ...address, userId: user.id }
+            data: address
         });
         return NextResponse.json({ newAddress, message: "Address added successfully" });
     } catch (error) {
