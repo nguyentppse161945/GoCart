@@ -11,7 +11,7 @@ import { set } from "date-fns";
 
 export default function CreateStore() {
   const { user } = useUser();
-  const { router } = useRouter();
+  const  router  = useRouter();
   const { getToken } = useAuth();
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
   const [status, setStatus] = useState("");
