@@ -55,7 +55,7 @@ export default function StoreAddProduct() {
         images[key] && formData.append("images", images[key]);
       });
       const token = await getToken();
-      const { data } = await axios.post("/api/product/create", formData, {
+      const { data } = await axios.post("/api/store/product", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success(data.message);
