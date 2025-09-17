@@ -1,8 +1,8 @@
 "use client";
-import { ShoppingCart, Search } from "lucide-react";
+import { ShoppingCart, Search ,ChevronDown} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import { useSelector } from "react-redux";
 import { UserButton, useClerk, useUser } from "@clerk/nextjs";
 
@@ -12,6 +12,54 @@ const Navbar = () => {
   const { openSignIn } = useClerk();
   const [search, setSearch] = useState("");
   const cartCount = useSelector((state) => state.cart.total);
+  const [openDashboard, setOpenDashboard] = useState(false);
+  const dashboardRef = useRef(null);
+  //close dashboard when click outside
+  useEffect(() => {
+  function handleClickOutside(event) {
+    if (dashboardRef.current && !dashboardRef.current.contains(event.target)) {
+      setOpenDashboard(false);
+    }
+  }
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+
+
+
+  //check seller
+
+  const [isSeller, setIsSeller] = useState(false);
+   useEffect(() => {
+    const checkSeller = async () => {
+      try {
+        const res = await fetch("/api/store/is-seller");
+        const data = await res.json();
+        setIsSeller(data.isSeller);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    checkSeller();
+  }, []);
+
+  //check admin
+
+  const [isAdmin, setIsAdmin] = useState(false);
+   useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const res = await fetch("/api/admin/is-admin");
+        const data = await res.json();
+        setIsAdmin(data.isAdmin);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    checkAdmin();
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -39,6 +87,7 @@ const Navbar = () => {
             <Link href="/shop">Shop</Link>
             <Link href="/">About</Link>
             <Link href="/">Contact</Link>
+              
 
             <form
               onSubmit={handleSearch}
@@ -65,6 +114,47 @@ const Navbar = () => {
                 {cartCount}
               </button>
             </Link>
+             {(isSeller || isAdmin) && (
+    <div ref={dashboardRef} className="relative">
+      <button
+        onClick={() => setOpenDashboard((prev) => !prev)}
+        className="text-xs border px-4 py-1.5 rounded-full flex items-center gap-1"
+      >
+        Dashboard
+        <ChevronDown size={14} />
+      </button>
+
+      {openDashboard && (
+        <div className="absolute right-0 mt-2 w-50  bg-white shadow-lg rounded-lg border z-50">
+          <ul className="text-sm text-slate-700 center-text items-center">
+            {isSeller && (
+              <li
+                onClick={() => {
+                  router.push("/store");
+                  setOpenDashboard(false);
+                }}
+                className="px-4 py-2 hover:bg-slate-200 cursor-pointer rounded-t-lg"
+              >
+                Seller Dashboard
+              </li>
+            )}
+            {isAdmin && (
+              <li
+                onClick={() => {
+                  router.push("/admin");
+                  setOpenDashboard(false);
+                }}
+                className="px-4 py-2 hover:bg-slate-200 cursor-pointer rounded-b-lg"
+              >
+                Admin Dashboard
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
+    </div>
+  )}
+
             {!user ? (
               <button
                 onClick={openSignIn}
@@ -86,7 +176,48 @@ const Navbar = () => {
           </div>
 
           {/* Mobile User Button  */}
-          <div className="sm:hidden">
+          <div className="sm:hidden flex items-center gap-3 ">
+             {(isSeller || isAdmin) && (
+    <div ref={dashboardRef} className="relative">
+      <button
+        onClick={() => setOpenDashboard((prev) => !prev)}
+        className="text-xs border px-4 py-1.5 rounded-full flex items-center gap-1"
+      >
+        Dashboard
+        <ChevronDown size={14} />
+      </button>
+
+      {openDashboard && (
+        <div className="absolute right-0 mt-2 w-44 bg-white shadow-lg rounded-lg border z-25">
+          <ul className="text-sm text-slate-700">
+            {isSeller && (
+              <li
+                onClick={() => {
+                  router.push("/store");
+                  setOpenDashboard(false);
+                }}
+                className="px-4 py-2 hover:bg-slate-200 cursor-pointer rounded-t-lg"
+              >
+                Seller Dashboard
+              </li>
+            )}
+            {isAdmin && (
+              <li
+                onClick={() => {
+                  router.push("/admin");
+                  setOpenDashboard(false);
+                }}
+                className="px-4 py-2 hover:bg-slate-200 cursor-pointer rounded-b-lg"
+              >
+                Admin Dashboard
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
+    </div>
+  )}
+
             {user ? (
               <div>
                 <UserButton>
