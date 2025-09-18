@@ -71,7 +71,7 @@ export async function POST(request) {
         //link store to user
         await prisma.user.update({
             where: { id: userId },
-            data: { store: { connect: { storeId: newStore.id } } }
+            data: { store: { connect: { id: newStore.id } } }
         })
 
         return NextResponse.json({ message: "Applied, waiting for approval" });
