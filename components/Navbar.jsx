@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState,useRef } from "react";
 import { useSelector } from "react-redux";
 import { UserButton, useClerk, useUser } from "@clerk/nextjs";
+import axios from "axios";
 
 const Navbar = () => {
   const router = useRouter();
@@ -35,8 +36,7 @@ const Navbar = () => {
    useEffect(() => {
     const checkSeller = async () => {
       try {
-        const res = await fetch("/api/store/is-seller");
-        const data = await res.json();
+        const {data} = await axios.get("/api/store/is-seller");
         setIsSeller(data.isSeller);
       } catch (err) {
         console.error(err);
@@ -51,8 +51,7 @@ const Navbar = () => {
    useEffect(() => {
     const checkAdmin = async () => {
       try {
-        const res = await fetch("/api/admin/is-admin");
-        const data = await res.json();
+        const {data} = await axios.get("/api/admin/is-admin");
         setIsAdmin(data.isAdmin);
       } catch (err) {
         console.error(err);
