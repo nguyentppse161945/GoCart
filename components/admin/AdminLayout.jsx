@@ -25,6 +25,9 @@ const AdminLayout = ({ children }) => {
       });
       setIsAdmin(data.isAdmin);
     } catch (error) {
+      if(error.response.status === 401) {
+        setIsAdmin(false);
+      }
       console.log(error);
     } finally {
       setLoading(false);

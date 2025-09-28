@@ -24,9 +24,13 @@ const StoreLayout = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       });
+      
       setIsSeller(data.isSeller);
       setStoreInfo(data.storeInfo);
     } catch (err) {
+      if(err.response.status === 401) {
+        setIsSeller(false);
+      }
       console.log(err);
     } finally {
       setLoading(false);
